@@ -118,7 +118,6 @@ namespace UnityEngine.Rendering.Universal
         // General settings
         [SerializeField] bool m_RequireDepthTexture = false;
         [SerializeField] bool m_RequireOpaqueTexture = false;
-        [SerializeField] bool m_RequireOccluderTexture = true;//[Coreframework，用于IDSystem中的OcclusionCulling]
         [SerializeField] Downsampling m_OpaqueDownsampling = Downsampling._2xBilinear;
         [SerializeField] bool m_SupportsTerrainHoles = true;
 
@@ -455,13 +454,6 @@ namespace UnityEngine.Rendering.Universal
         {
             get { return m_RequireOpaqueTexture; }
             set { m_RequireOpaqueTexture = value; }
-        }
-
-        //[Coreframework，用于IDSystem中的OcclusionCulling]
-        public bool supportsCameraOccluderTexture
-        {
-            get { return m_RequireOccluderTexture; }
-            set { m_RequireOccluderTexture = value; }
         }
 
         public Downsampling opaqueDownsampling

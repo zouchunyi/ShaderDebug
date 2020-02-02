@@ -47,7 +47,6 @@ namespace UnityEngine.Rendering.Universal
         public bool isHdrEnabled;
         public bool requiresDepthTexture;
         public bool requiresOpaqueTexture;
-        public bool requiresOccluderTexture;//[Coreframework，用于IDSystem中的OcclusionCulling]
 
         public SortingCriteria defaultOpaqueSortFlags;
 

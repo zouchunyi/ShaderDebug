@@ -48,9 +48,6 @@ namespace UnityEngine.Rendering.Universal
         ForwardLights m_ForwardLights;
         StencilState m_DefaultStencilState;
 
-        //OC
-        private OcclusionCullingPass m_OcclusionCullingPass;
-
         public ForwardRenderer(ForwardRendererData data) : base(data)
         {
             Material blitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS);
@@ -84,9 +81,6 @@ namespace UnityEngine.Rendering.Universal
             m_CapturePass = new CapturePass(RenderPassEvent.AfterRendering);
             m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering, blitMaterial);
 
-            //[Coreframework，用于IDSystem中的OcclusionCulling]
-            m_OcclusionCullingPass = new OcclusionCullingPass(RenderPassEvent.BeforeRenderingPrepasses, RenderQueueRange.opaque, data.opaqueLayerMask);
- 
 #if UNITY_EDITOR
             m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(RenderPassEvent.AfterRendering + 9, copyDepthMaterial);
 #endif
@@ -193,13 +187,6 @@ namespace UnityEngine.Rendering.Universal
             {
                 m_DepthPrepass.Setup(cameraTargetDescriptor, m_DepthTexture);
                 EnqueuePass(m_DepthPrepass);
-            }
-
-            //[Coreframework，用于IDSystem中的OcclusionCulling]
-            if (renderingData.cameraData.requiresOccluderTexture)
-            {
-                m_OcclusionCullingPass.Setup(cameraTargetDescriptor);
-                EnqueuePass(m_OcclusionCullingPass);
             }
 
             if (resolveShadowsInScreenSpace)

@@ -301,13 +301,11 @@ namespace UnityEngine.Rendering.Universal
                 cameraData.isDitheringEnabled = cameraData.postProcessEnabled && additionalCameraData.dithering;
                 cameraData.antialiasing = cameraData.postProcessEnabled ? additionalCameraData.antialiasing : AntialiasingMode.None;
                 cameraData.antialiasingQuality = additionalCameraData.antialiasingQuality;
-                cameraData.requiresOccluderTexture = UniversalRenderPipeline.asset.supportsCameraOccluderTexture;//[Coreframework，用于IDSystem中的OcclusionCulling]
             }
             else if(camera.cameraType == CameraType.SceneView)
             {
                 cameraData.requiresDepthTexture = settings.supportsCameraDepthTexture;
                 cameraData.requiresOpaqueTexture = settings.supportsCameraOpaqueTexture;
-                cameraData.requiresOccluderTexture = UniversalRenderPipeline.asset.supportsCameraOccluderTexture;//[Coreframework，用于IDSystem中的OcclusionCulling]
                 cameraData.volumeLayerMask = 1; // "Default"
                 cameraData.volumeTrigger = null;
                 cameraData.postProcessEnabled = CoreUtils.ArePostProcessesEnabled(camera);
@@ -320,7 +318,6 @@ namespace UnityEngine.Rendering.Universal
             {
                 cameraData.requiresDepthTexture = settings.supportsCameraDepthTexture;
                 cameraData.requiresOpaqueTexture = settings.supportsCameraOpaqueTexture;
-                cameraData.requiresOccluderTexture = UniversalRenderPipeline.asset.supportsCameraOccluderTexture;//[Coreframework，用于IDSystem中的OcclusionCulling]
                 cameraData.volumeLayerMask = 1; // "Default"
                 cameraData.volumeTrigger = null;
                 cameraData.postProcessEnabled = false;

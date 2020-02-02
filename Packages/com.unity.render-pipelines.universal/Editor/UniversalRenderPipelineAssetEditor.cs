@@ -27,8 +27,6 @@ namespace UnityEditor.Rendering.Universal
             public static GUIContent rendererMissingText = EditorGUIUtility.TrIconContent("console.warnicon.sml", "Renderer missing. Click this to select a new renderer.");
             public static GUIContent rendererDefaultMissingText = EditorGUIUtility.TrIconContent("console.erroricon.sml", "Default renderer missing. Click this to select a new renderer.");
             public static GUIContent requireDepthTextureText = EditorGUIUtility.TrTextContent("Depth Texture", "If enabled the pipeline will generate camera's depth that can be bound in shaders as _CameraDepthTexture.");
-            //[Coreframework，用于IDSystem中的OcclusionCulling]
-            public static GUIContent requireOccluderTextureText = EditorGUIUtility.TrTextContent("Occluder Texture", "If enabled the pipeline will generate camera's occluder Texture that can be bound in shaders as _OCCameraDepthTexture.");
             public static GUIContent requireOpaqueTextureText = EditorGUIUtility.TrTextContent("Opaque Texture", "If enabled the pipeline will copy the screen to texture after opaque objects are drawn. For transparent objects this can be bound in shaders as _CameraOpaqueTexture.");
             public static GUIContent opaqueDownsamplingText = EditorGUIUtility.TrTextContent("Opaque Downsampling", "The downsampling method that is used for the opaque texture");
             public static GUIContent supportsTerrainHolesText = EditorGUIUtility.TrTextContent("Terrain Holes", "When disabled, Universal Rendering Pipeline removes all Terrain hole Shader variants when you build for the Unity Player. This decreases build time.");
@@ -98,7 +96,6 @@ namespace UnityEditor.Rendering.Universal
         ReorderableList m_RendererDataList;
 
         SerializedProperty m_RequireDepthTextureProp;
-        SerializedProperty m_RequireOccluderTextureProp;//[Coreframework，用于IDSystem中的OcclusionCulling]
         SerializedProperty m_RequireOpaqueTextureProp;
         SerializedProperty m_OpaqueDownsamplingProp;
         SerializedProperty m_SupportsTerrainHolesProp;
@@ -166,7 +163,6 @@ namespace UnityEditor.Rendering.Universal
             DrawRendererListLayout(m_RendererDataList, m_RendererDataProp);
 
             m_RequireDepthTextureProp = serializedObject.FindProperty("m_RequireDepthTexture");
-            m_RequireOccluderTextureProp = serializedObject.FindProperty("m_RequireOccluderTexture");//[Coreframework，用于IDSystem中的OcclusionCulling]
             m_RequireOpaqueTextureProp = serializedObject.FindProperty("m_RequireOpaqueTexture");
             m_OpaqueDownsamplingProp = serializedObject.FindProperty("m_OpaqueDownsampling");
             m_SupportsTerrainHolesProp = serializedObject.FindProperty("m_SupportsTerrainHoles");
@@ -226,7 +222,6 @@ namespace UnityEditor.Rendering.Universal
 
                 EditorGUILayout.PropertyField(m_RequireDepthTextureProp, Styles.requireDepthTextureText);
                 EditorGUILayout.PropertyField(m_RequireOpaqueTextureProp, Styles.requireOpaqueTextureText);
-                EditorGUILayout.PropertyField(m_RequireOccluderTextureProp, Styles.requireOccluderTextureText);//[Coreframework，用于IDSystem中的OcclusionCulling]
                 EditorGUI.indentLevel++;
                 EditorGUI.BeginDisabledGroup(!m_RequireOpaqueTextureProp.boolValue);
                 EditorGUILayout.PropertyField(m_OpaqueDownsamplingProp, Styles.opaqueDownsamplingText);
