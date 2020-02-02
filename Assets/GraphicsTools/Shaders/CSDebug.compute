@@ -1,0 +1,27 @@
+﻿#pragma kernel CSMain
+
+//1) 在定义前添加
+#include "Packages/com.seasun.graphics/Shaders/Debug/CSDebug.hlsl" 
+
+RWTexture2D<float4> Result;
+Texture2D Source;
+
+//2）定义变量，其中变量名同C#中的定义
+DEBUG_DEF(Debug1)
+DEBUG_DEF(Debug2)
+
+[numthreads(1, 1, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+	int i = id.x;
+	int j = id.y;
+	float c = Source[float2(i, j)].x * 0.3 + Source[float2(i, j)].y * 0.2 + Source[float2(i, j)].z * 0.5;
+	Result[float2(i, j)] = float4(c, c, c, Source[float2(i, j)].w);
+
+	if (i == 100 && j == 100)
+	{
+		//3）增添想要输出的变量
+		DEBUG_VALUE(Debug1, Source[float2(i, j)].x)
+		DEBUG_VALUE(Debug2, Source[float2(i, j)].y)
+	}
+}
