@@ -7,7 +7,7 @@ public class CSTest : MonoBehaviour
 {
     public ComputeShader m_ComputeShader = null;
     public Texture2D m_SrcTexture = null;
-    public RenderTexture m_RenderTexture = null;
+    private RenderTexture m_RenderTexture = null;
 
     private int kernel = 0;
 

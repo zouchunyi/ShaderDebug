@@ -115,7 +115,7 @@ namespace CoreFramework.GraphicsTools
             float[] values = new float[5] { 0, 0, 0, 0, 0 };
             ComputeBuffer buffer = null;
             buffer = new ComputeBuffer(values.Length, 4);
-            buffer.SetData(m_Values);
+            buffer.SetData(values);
 
             if (m_State == State.Manual)
             {
