@@ -85,7 +85,7 @@
 	struct VertexDebutV2F
 	{
 		float4 vertex : SV_POSITION;
-		float2 value : TEXCOORD0;
+		float3 value : TEXCOORD0;
 	};
 
 	#define VERTEX_DEBUG_FUN(RETURN, FUNNAME, STRUCTNAME, VARNAME) VertexDebutV2F FUNNAME(STRUCTNAME VARNAME)
@@ -95,7 +95,9 @@
 		debugOUT.vertex = proVertex; \
 		debugOUT.value = JUDGE_INIT_VALUE; \
 	
-	#define VERTEX_DEBUG_VALUE(index, val) debugOUT.value.index = val;
+	#define VERTEX_DEBUG_VALUE(index, val)\
+		debugOUT.value.index = val; \
+
 	#define VERTEX_DEBUG_OUTPUT(value) return debugOUT;
 
 	uniform float4 _VertexDebugParams;
@@ -106,7 +108,7 @@
 	#define STREAM_NAME LineStream
 	static int GEOMERTY_LINE_SIZE = 2;
 
-	static int GEOMERTY_OUTPUT_MAX = int(1024 / (2 + 4));
+	static int GEOMERTY_OUTPUT_MAX = int(1024 / (3 + 4));
 	#if UNITY_REVERSED_Z
 	static float Z_DEPTH_MAX = 1;
 	#else
@@ -138,10 +140,10 @@
 		endPoint.y *= -1;
 	#endif
 		newPoint.VERTEX_DEBUG_VERTEX_NAME = startPoint;
-		newPoint.value = float2(1, 0);
+		newPoint.value.z = 1;
 		tristream.Append(newPoint);
 		newPoint.VERTEX_DEBUG_VERTEX_NAME = endPoint;
-		newPoint.value = float2(1, 0);
+		newPoint.value.z = 1;
 		tristream.Append(newPoint);
 		tristream.RestartStrip();
 	}
@@ -153,10 +155,10 @@
 		endPoint.y *= -1;
 	#endif
 		newPoint.VERTEX_DEBUG_VERTEX_NAME = float4(startPoint, Z_DEPTH_MAX, 1);
-		newPoint.value = float2(1, 0);
+		newPoint.value.z = 1;
 		tristream.Append(newPoint);
 		newPoint.VERTEX_DEBUG_VERTEX_NAME = float4(endPoint, Z_DEPTH_MAX, 1);
-		newPoint.value = float2(1, 0);
+		newPoint.value.z = 1;
 		tristream.Append(newPoint);
 		tristream.RestartStrip();
 	}
@@ -492,14 +494,33 @@
 	[maxvertexcount(GEOMERTY_OUTPUT_MAX)]
 	void geom(triangle STRUCT_NAME input[3], inout STREAM_NAME<STRUCT_NAME> tristream)
 	{
+		float2 realValue = JUDGE_INIT_VALUE;
+		if (any(input[0].value - JUDGE_INIT_VALUE))
+		{
+			realValue = input[0].value.xy;
+		}
+		else if (any(input[1].value - JUDGE_INIT_VALUE))
+		{
+			realValue = input[1].value.xy;
+		}
+		else if (any(input[2].value - JUDGE_INIT_VALUE))
+		{
+			realValue = input[2].value.xy;
+		}
+
+		float2 p0Value = input[0].value.xy;
+		float2 p1Value = input[1].value.xy;
+		float2 p2Value = input[2].value.xy;
+
+
 		STRUCT_NAME p = input[0];
-		p.value = 0;
+		p.value = float3(realValue, 0);
 		tristream.Append(p);
 		p = input[1];
-		p.value = 0;
+		p.value = float3(realValue, 0);
 		tristream.Append(p);
 		p = input[2];
-		p.value = 0;
+		p.value = float3(realValue, 0);
 		tristream.Append(p);
 		tristream.RestartStrip();
 
@@ -509,10 +530,10 @@
 		bool excute = true;
 		if (VERTEX_DEBUG_INDEX == 0 || VERTEX_DEBUG_INDEX == 3)
 		{
-			if (any(input[0].value - JUDGE_INIT_VALUE))
+			if (any(p0Value - JUDGE_INIT_VALUE))
 			{
 				excute = false;
-				addValue = input[0].value;
+				addValue = p0Value;
 				if (abs(addValue.x) < 0)
 				{
 					addValue.x *= 1000000;
@@ -532,10 +553,10 @@
 		}
 		if (excute && (VERTEX_DEBUG_INDEX == 1 || VERTEX_DEBUG_INDEX == 3))
 		{
-			if (any(input[1].value - JUDGE_INIT_VALUE))
+			if (any(p1Value - JUDGE_INIT_VALUE))
 			{
 				excute = false;
-				addValue = input[1].value;
+				addValue = p1Value;
 				if (abs(addValue.x) < 0)
 				{
 					addValue.x *= 1000000;
@@ -556,9 +577,9 @@
 		
 		if (excute)
 		{
-			if (any(input[2].value - JUDGE_INIT_VALUE))
+			if (any(p2Value - JUDGE_INIT_VALUE))
 			{
-				addValue = input[2].value;
+				addValue = p2Value;
 				if (abs(addValue.x) < 0)
 				{
 					addValue.x *= 1000000;
@@ -578,9 +599,17 @@
 		}
 	}
 
-	float4 debugFrag(VertexDebutV2F IN) : SV_Target
+	void debugFrag(VertexDebutV2F IN, out float4 output1 : SV_Target0, out float4 output2 : SV_Target1)
 	{
-		return float4(IN.value.xy, 0, 1);
+		if (any(IN.value.xy - JUDGE_INIT_VALUE))
+		{
+			output2 = float4(IN.value.xy, 100, -12589);
+		}
+		else
+		{
+			output2 = 0;
+		}
+		output1 = float4(IN.value.z, 0, 0, 1);
 	}
 #else
 	#define VERTEX_DEBUG_FUN(RETURN, FUNNAME, STRUCTNAME, VARNAME) RETURN FUNNAME(STRUCTNAME VARNAME)
